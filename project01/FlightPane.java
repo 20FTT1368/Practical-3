@@ -1,11 +1,15 @@
 package project01;
 
+import java.util.LinkedList;
+import java.util.Random;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class FlightPane extends Pane {
@@ -13,6 +17,9 @@ public class FlightPane extends Pane {
 	private static final int HEIGHT = 600;
 	public Bird bird;
 	public boolean gameStart = false;
+	private Random random = new Random();
+	private LinkedList<Rectangle> topWalls = new LinkedList<Rectangle>();
+	private LinkedList<Rectangle> bottomWalls = new LinkedList<Rectangle>();
 
 	public FlightPane() {
 		this.setPrefWidth(WIDTH);
@@ -24,13 +31,34 @@ public class FlightPane extends Pane {
 		bird.setLayoutX(10);
 		bird.setLayoutY(300);
 
+		generateWall(250);
+		generateWall(500);
+		generateWall(750);
+
 		Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> {
+
 			bird.setLayoutY(bird.getLayoutY() + 5);
 
 			if(gameStart == true) {
 				bird.setLayoutY(bird.getLayoutY() + 5);
+				for(Rectangle topWall : topWalls) {
+					topWall.setLayoutX(topWall.getLayoutX() - 5);
+				}
+				for(Rectangle bottomWall : bottomWalls) {
+					bottomWall.setLayoutX(bottomWall.getLayoutX() - 5);
+				}
+
+				// This will check if the left most walls goes beyond the left of the pane
+				if(topWalls.getFirst().getBoundsInParent().getMaxX() < 0) {
+					Rectangle topWall = topWalls.removeFirst();
+					Rectangle bottomWall = bottomWalls.removeFirst();
+
+					this.getChildren().removeAll(topWall, bottomWall);
+					generateWall(topWalls.getLast().getBoundsInParent().getCenterX()
+							+ 250);
+				}
 			}
-			
+
 		}));
 
 		animation.setCycleCount(Timeline.INDEFINITE);
@@ -39,5 +67,17 @@ public class FlightPane extends Pane {
 
 	public void moveBirdUp() {
 		bird.setLayoutY(bird.getLayoutY() - 50);
+	}
+
+	public void generateWall(double x) {
+		int topHeight = random.nextInt(250) + 100;
+		int bottomHeight = HEIGHT - topHeight - 150;
+		Rectangle topWall = new Rectangle(x, 0, 50, topHeight);
+		Rectangle bottomWall = new Rectangle(x, HEIGHT - bottomHeight, 50, bottomHeight);
+		this.getChildren().addAll(topWall, bottomWall);
+		topWalls.add(topWall); // this will add to the end of the LinkedList
+		bottomWalls.add(bottomWall); // this will add to the end of LinkedList
+
+
 	}
 }
