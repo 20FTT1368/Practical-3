@@ -30,4 +30,8 @@ public class ScorePane extends HBox {
 				null, null)));
 
 	}
+
+	public void updateScoreLabel(int score) {
+		scoreLabel.setText("" + score);
+	}
 }

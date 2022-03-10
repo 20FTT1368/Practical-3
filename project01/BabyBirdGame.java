@@ -15,11 +15,12 @@ import javafx.stage.Stage;
 
 public class BabyBirdGame extends Application {
 	private static Stage primaryStage;
-
+	
 	private static int score = 0;
 	private static int previousScore = 0;
-
+	
 	private static boolean FIRST_KEY_PRESSED = true;
+	private static ScorePane scorePane;
 
 	@Override
 	public void start(Stage arg0) throws Exception {	
@@ -49,7 +50,9 @@ public class BabyBirdGame extends Application {
 		titleLabel.setTextFill(Color.WHITE);
 
 		// Score
-		ScorePane scorePane = new ScorePane("Score: ", score,
+		//        ScorePane scorePane = new ScorePane("Score: ", score,
+		//        Color.DARKBLUE, Color.WHITE);
+		scorePane = new ScorePane("Score: ", score,
 				Color.DARKBLUE, Color.WHITE);
 
 		// Previous Score
@@ -90,6 +93,11 @@ public class BabyBirdGame extends Application {
 		primaryStage.setScene(scene);
 
 	}
+	
+	public static void updateScore() {
+		 score++;
+		 scorePane.updateScoreLabel(score);
+		 }
 
 	public static void main(String[] args) {
 		Application.launch(args);

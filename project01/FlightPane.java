@@ -37,25 +37,39 @@ public class FlightPane extends Pane {
 
 		Timeline animation = new Timeline(new KeyFrame(Duration.millis(50), e -> {
 
-			bird.setLayoutY(bird.getLayoutY() + 5);
-
 			if(gameStart == true) {
 				bird.setLayoutY(bird.getLayoutY() + 5);
+				BabyBirdGame.updateScore();   
+				
+				//TOP WALL
 				for(Rectangle topWall : topWalls) {
 					topWall.setLayoutX(topWall.getLayoutX() - 5);
 
-					if(topWalls.getFirst().getBoundsInParent().getMaxX() < 0) {
-
-					}
 					if(bird.getBoundsInParent().intersects(topWall.getBoundsInParent())) {
 						gameStart = false;
 					}
+					if(topWalls.getFirst().getBoundsInParent().getMaxX() < 0) {
+
+					}
 					if(gameStart == false) {
-						 BabyBirdGame.initGUI();
+						BabyBirdGame.initGUI();
 					}
 				}
+				
+				//BOTTOM WALL
 				for(Rectangle bottomWall : bottomWalls) {
 					bottomWall.setLayoutX(bottomWall.getLayoutX() - 5);
+
+					if(bird.getBoundsInParent().intersects(bottomWall.getBoundsInParent())) {
+						gameStart = false;
+					}
+					if(bottomWalls.getFirst().getBoundsInParent().getMaxX() < 0) {
+
+					}
+					if(gameStart == false) {
+						BabyBirdGame.initGUI();
+					}
+
 				}
 
 				// Check if bird goes beyond pane height
@@ -69,9 +83,9 @@ public class FlightPane extends Pane {
 					Rectangle bottomWall = bottomWalls.removeFirst();
 
 					this.getChildren().removeAll(topWall, bottomWall);
-					generateWall(topWalls.getLast().getBoundsInParent().getCenterX()
-							+ 250);
+					generateWall(topWalls.getLast().getBoundsInParent().getCenterX() + 250);
 				}
+				
 			}
 
 		}));
