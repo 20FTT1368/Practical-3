@@ -11,14 +11,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
 
 public class BabyBirdGame extends Application {
 	private static Stage primaryStage;
-	
+
 	private static int score = 0;
 	private static int previousScore = 0;
-	
+
 	private static boolean FIRST_KEY_PRESSED = true;
 	private static ScorePane scorePane;
 
@@ -64,40 +66,47 @@ public class BabyBirdGame extends Application {
 		FlightPane flightPane = new FlightPane();
 
 		// Help Message
+		Label helpLabel = new Label("Press <space> to start the game and fly the bird."
+				+ "Make sure the bird does not hit the ground, ceiling or the walls.");
+		
+				helpLabel.setFont(Font.font(20));
+				helpLabel.setTextFill(Color.WHITE);
+				helpLabel.setWrapText(true);
+				helpLabel.setTextAlignment(TextAlignment.CENTER);
+				helpLabel.setPrefWidth(600);
 
+				rootPane.getChildren().addAll(titleLabel, scorePane, previousScorePane,
+						flightPane);
 
-		rootPane.getChildren().addAll(titleLabel, scorePane, previousScorePane,
-				flightPane);
+				Scene scene = new Scene(rootPane);
 
-		Scene scene = new Scene(rootPane);
+				//The Bird moving part
+				scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+					if(e.getCode() == KeyCode.SPACE) {
+						if(FIRST_KEY_PRESSED) {
+							flightPane.gameStart = true;
+							flightPane.bird.wingUp();
+							flightPane.moveBirdUp();
+							FIRST_KEY_PRESSED = false; // This will disable bird from moving up.
+						}  
+					}
+				});
 
-		//The Bird moving part
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-			if(e.getCode() == KeyCode.SPACE) {
-				if(FIRST_KEY_PRESSED) {
-					flightPane.gameStart = true;
-					flightPane.bird.wingUp();
-					flightPane.moveBirdUp();
-					FIRST_KEY_PRESSED = false; // This will disable bird from moving up.
-				}  
-			}
-		});
+				scene.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+					if(e.getCode() == KeyCode.SPACE) {
+						flightPane.bird.wingDown();
+						FIRST_KEY_PRESSED = true;
+					}
+				});
 
-		scene.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-			if(e.getCode() == KeyCode.SPACE) {
-				flightPane.bird.wingDown();
-				FIRST_KEY_PRESSED = true;
-			}
-		});
-
-		primaryStage.setScene(scene);
+				primaryStage.setScene(scene);
 
 	}
-	
+
 	public static void updateScore() {
-		 score++;
-		 scorePane.updateScoreLabel(score);
-		 }
+		score++;
+		scorePane.updateScoreLabel(score);
+	}
 
 	public static void main(String[] args) {
 		Application.launch(args);
