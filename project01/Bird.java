@@ -11,7 +11,7 @@ public class Bird extends Pane {
 	Circle body, eye;
 
 	public Bird() {
-		
+
 		beak = new Polygon();
 		beak.getPoints().addAll(
 				35.0, 15.0,
@@ -19,15 +19,15 @@ public class Bird extends Pane {
 				35.0, 25.0
 				);
 		beak.setFill(Color.YELLOW);
-		
+
 		body = new Circle(20, 20, 20);
 		body.setFill(Color.BROWN);
-		
+
 		eye = new Circle(30, 15, 5);
 		eye.setFill(Color.BLACK);
 		eye.setStroke(Color.WHITE);
 		eye.setStrokeWidth(3);
-		
+
 		wing = new Polygon();
 		wing.getPoints().addAll(
 				10.0, 20.0,
@@ -36,8 +36,24 @@ public class Bird extends Pane {
 				);
 		wing.setFill(Color.ORANGE);
 		wing.setStroke(Color.BLACK);
-		
+
 		this.getChildren().addAll(beak, body, eye, wing);
+	}
+
+	public void wingUp() {
+		wing.getPoints().remove(wing.getPoints().size()-1);
+		wing.getPoints().remove(wing.getPoints().size()-1);
+		wing.getPoints().addAll(
+				25.0, 10.0
+				);
+	}
+
+	public void wingDown() {
+		wing.getPoints().remove(wing.getPoints().size()-1);
+		wing.getPoints().remove(wing.getPoints().size()-1);
+		wing.getPoints().addAll(
+				15.0, 35.0
+				);
 	}
 
 }
